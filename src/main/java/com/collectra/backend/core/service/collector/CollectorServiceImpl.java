@@ -4,6 +4,8 @@ import com.collectra.backend.core.dao.collector.CollectorDao;
 import com.collectra.backend.core.domain.Collector;
 import com.collectra.backend.core.input.collector.CreateCollectorInput;
 import com.collectra.backend.core.mapper.collector.CollectorMapper;
+import jakarta.persistence.EntityNotFoundException;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +18,12 @@ public class CollectorServiceImpl implements CollectorService {
   @Override
   public Collector createCollector(CreateCollectorInput input) {
     return collectorDao.create(CollectorMapper.INSTANCE.from(input));
+  }
+
+  @Override
+  public Collector getById(UUID id) {
+    final var daoResponse = collectorDao.getById(id);
+
+    return daoResponse.orElseThrow(() -> new EntityNotFoundException("Collector not found"));
   }
 }
